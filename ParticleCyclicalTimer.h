@@ -42,6 +42,9 @@ class cycleTimer{
 	
 	//Set off time for this timer
 	void setOffTime (byte hour, byte min);
+	
+	//Get time remaining in this timer. Returns 0 if off.
+	int getRemainingTime ();
 
  protected:
 	byte _ONhour;

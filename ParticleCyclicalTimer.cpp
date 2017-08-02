@@ -33,21 +33,20 @@
  
  //Return true if timer is active
  boolean cycleTimer::isActive(){
-	//get time since midnight
 	//Functions Time.Hour and Time.minute use Local time!
 	int _timeLocal = (Time.hour() * 3600) + (Time.minute() * 60);
 	//convert ON and OFF times to seconds from midnight
-	int _setOnFromMidnight  = ((int)_ONhour * 3600) + ((int)_ONmin * 60);
-	int _setOffFromMidnight = ((int)_OFFhour * 3600) + ((int)_OFFmin * 60);
+	int _onFromMidnight  = ((int)_ONhour * 3600) + ((int)_ONmin * 60);
+	int _offFromMidnight = ((int)_OFFhour * 3600) + ((int)_OFFmin * 60);
 	
-	if(_setOnFromMidnight < _setOffFromMidnight)//Normal Routine
-		if(_timeLocal >= _setOnFromMidnight && _timeLocal <= _setOffFromMidnight){ //Time is between alarms
+	if(_onFromMidnight < _offFromMidnight)//Normal Routine
+		if(_timeLocal > _onFromMidnight && _timeLocal < _offFromMidnight){ //Time is between alarms
 			return true;
 		}
 		else
 			return false;
-	else if(_setOnFromMidnight > _setOffFromMidnight)//Inverted Routine
-		if(_timeLocal >= _setOnFromMidnight || _timeLocal <= _setOffFromMidnight){ //Time is outside alarms
+	else if(_onFromMidnight > _offFromMidnight)//Inverted Routine
+		if(_timeLocal >= _onFromMidnight || _timeLocal <= _offFromMidnight){ //Time is outside alarms
 			return true;
 		}
 		else
@@ -65,3 +64,17 @@ void  cycleTimer::setOffTime (byte hour, byte min){
 	_OFFhour = hour;
 	_OFFmin  = min;
 }
+
+//Get time remaining in this timer. Returns 0 if off.
+int  cycleTimer::getRemainingTime (){
+	int _timeLocal = (Time.hour() * 3600) + (Time.minute() * 60) + Time.second();
+	int _offFromMidnight = ((int)_OFFhour * 3600) + ((int)_OFFmin * 60);
+	int _delta = _offFromMidnight - _timeLocal;
+	if (_delta <= 0){
+		return 0;
+	}
+	else {
+		return _delta;
+	}
+}
+	
